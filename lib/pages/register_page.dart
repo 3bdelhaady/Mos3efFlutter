@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import '/api/api_service.dart';
 import 'login_page.dart';
 
 class RegisterPage extends StatefulWidget {
-  final ApiService api;
-
-  const RegisterPage({super.key, required this.api});
+  const RegisterPage({super.key});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -20,7 +17,7 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _loading = false;
   String _message = "";
 
-  void _register() async {
+  void _register() {
     String name = _nameController.text.trim();
     String email = _emailController.text.trim();
     String password = _passwordController.text;
@@ -48,27 +45,18 @@ class _RegisterPageState extends State<RegisterPage> {
       _message = "";
     });
 
-    bool success = await widget.api.registerUser(
-      name: name,
-      email: email,
-      password: password,
-      confirmPassword: confirmPassword,
-    );
-
-    setState(() => _loading = false);
-
-    if (success) {
+    // Mock registration
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() => _loading = false);
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text("Registered successfully!")));
+      ).showSnackBar(const SnackBar(content: Text("Registered successfully!")));
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => LoginPage(api: widget.api)),
+        MaterialPageRoute(builder: (_) => const LoginPage()),
       );
-    } else {
-      setState(() => _message = "Registration failed!");
-    }
+    });
   }
 
   @override
@@ -92,7 +80,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         GestureDetector(
                           onTap: () {},
                           child: Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 15,
                               vertical: 10,
                             ),
@@ -100,7 +88,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               color: Colors.blue,
                               borderRadius: BorderRadius.circular(50),
                             ),
-                            child: Text(
+                            child: const Text(
                               "تسجيل",
                               style: TextStyle(
                                 color: Colors.white,
@@ -110,18 +98,18 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ),
 
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => LoginPage(api: widget.api),
+                                builder: (_) => const LoginPage(),
                               ),
                             );
                           },
                           child: Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 15,
                               vertical: 10,
                             ),
@@ -130,7 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               borderRadius: BorderRadius.circular(50),
                               border: Border.all(color: Colors.blue, width: 2),
                             ),
-                            child: Text(
+                            child: const Text(
                               "دخول",
                               style: TextStyle(
                                 color: Colors.blue,
@@ -157,7 +145,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         width: 250,
                         height: 250,
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
                       Image.asset(
                         'Image/Container.png',
@@ -166,70 +154,72 @@ class _RegisterPageState extends State<RegisterPage> {
                         fit: BoxFit.cover,
                       ),
 
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       TextField(
                         controller: _nameController,
                         decoration: InputDecoration(
                           labelText: "الاسم",
-                          prefixIcon: Icon(Icons.person),
+                          prefixIcon: const Icon(Icons.person),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
                       TextField(
                         controller: _emailController,
                         decoration: InputDecoration(
                           labelText: "البريد الإلكتروني",
-                          prefixIcon: Icon(Icons.email),
+                          prefixIcon: const Icon(Icons.email),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
                       TextField(
                         controller: _passwordController,
                         obscureText: true,
                         decoration: InputDecoration(
                           labelText: "كلمة المرور",
-                          prefixIcon: Icon(Icons.lock),
+                          prefixIcon: const Icon(Icons.lock),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
 
                       TextField(
                         controller: _confirmTextController,
                         obscureText: true,
                         decoration: InputDecoration(
                           labelText: "تأكيد كلمة المرور",
-                          prefixIcon: Icon(Icons.lock_outline),
+                          prefixIcon: const Icon(Icons.lock_outline),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
                       ),
 
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
                       GestureDetector(
                         onTap: _register,
                         child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 15),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
                           decoration: BoxDecoration(
                             color: Colors.blue,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Center(
                             child: _loading
-                                ? CircularProgressIndicator(color: Colors.white)
-                                : Text(
+                                ? const CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )
+                                : const Text(
                                     "تسجيل",
                                     style: TextStyle(
                                       fontSize: 16,
@@ -241,10 +231,10 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
 
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Text(
                         _message,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.red,
                           fontWeight: FontWeight.bold,
                         ),

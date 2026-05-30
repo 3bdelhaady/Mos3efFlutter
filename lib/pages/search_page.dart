@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import '/api/api_service.dart';
 import 'my_saved.dart';
 import 'profile_ui.dart';
 import 'Home_page.dart';
 import 'service_details.dart';
 
 class ServicesPage extends StatefulWidget {
-  final ApiService api;
-
-  const ServicesPage({required this.api, super.key});
+  const ServicesPage({super.key});
 
   @override
   _ServicesPageState createState() => _ServicesPageState();
@@ -16,38 +13,33 @@ class ServicesPage extends StatefulWidget {
 
 class _ServicesPageState extends State<ServicesPage> {
   final TextEditingController _searchController = TextEditingController();
-  List<dynamic> _services = [];
-  bool _loading = false;
+  final List<dynamic> _services = [
+    {
+      "id": 1,
+      "name": "General Check-up",
+      "hospital": "City Hospital",
+      "price": "500 EGP",
+      "image":
+          "https://www.aha.org/sites/default/files/2023-04/Hospital2_icon.png",
+    },
+    {
+      "id": 2,
+      "name": "Dental Cleaning",
+      "hospital": "Smile Dental Clinic",
+      "price": "300 EGP",
+      "image":
+          "https://www.aha.org/sites/default/files/2023-04/Hospital2_icon.png",
+    },
+    {
+      "id": 3,
+      "name": "X-Ray",
+      "hospital": "General Hospital",
+      "price": "700 EGP",
+      "image":
+          "https://www.aha.org/sites/default/files/2023-04/Hospital2_icon.png",
+    },
+  ];
   String? _selectedCategory;
-
-  final Set<int> _favoriteIds = {};
-
-  Future<void> fetchServices({String? keyword, String? category}) async {
-    setState(() {
-      _loading = true;
-      _selectedCategory = category;
-    });
-
-    try {
-      final result = await widget.api.searchServices(
-        keyword: keyword?.trim(),
-        category: category,
-      );
-
-      setState(() {
-        _services = result;
-      });
-    } catch (e) {
-      print('Error fetching services: $e');
-      setState(() {
-        _services = [];
-      });
-    } finally {
-      setState(() {
-        _loading = false;
-      });
-    }
-  }
 
   Widget buildCategoryButton(String label, String categoryValue) {
     final isSelected = _selectedCategory == categoryValue;
@@ -59,12 +51,9 @@ class _ServicesPageState extends State<ServicesPage> {
         foregroundColor: isSelected ? Colors.white : Colors.black,
       ),
       onPressed: () {
-        fetchServices(
-          category: categoryValue,
-          keyword: _searchController.text.isEmpty
-              ? null
-              : _searchController.text,
-        );
+        setState(() {
+          _selectedCategory = categoryValue;
+        });
       },
       child: Text(label),
     );
@@ -92,221 +81,99 @@ class _ServicesPageState extends State<ServicesPage> {
                     textAlign: TextAlign.right,
                     textDirection: TextDirection.rtl,
                     keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'ابحث عن الخدمة',
                       border: OutlineInputBorder(),
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
-                ElevatedButton(
+                IconButton(
+                  icon: const Icon(Icons.search),
                   onPressed: () {
-                    fetchServices(
-                      keyword: _searchController.text.isEmpty
-                          ? null
-                          : _searchController.text,
-                    );
+                    // Mock search
                   },
-                  child: Text('بحث'),
                 ),
               ],
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 10),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  buildCategoryButton('طواريء', 'EmergencyRoom'),
-                  SizedBox(width: 8),
-                  buildCategoryButton('عناية مركزة', 'ICU'),
-                  SizedBox(width: 8),
-                  buildCategoryButton('حضانة اطفال', 'NICU'),
-                  SizedBox(width: 8),
-                  buildCategoryButton('بنك الدم', 'BloodBank'),
+                  buildCategoryButton('الكل', 'all'),
+                  const SizedBox(width: 8),
+                  buildCategoryButton('مستشفى', 'hospital'),
+                  const SizedBox(width: 8),
+                  buildCategoryButton('عيادة', 'clinic'),
+                  const SizedBox(width: 8),
+                  buildCategoryButton('مختبر', 'lab'),
                 ],
               ),
             ),
-            SizedBox(height: 12),
             Expanded(
-              child: _loading
-                  ? Center(child: CircularProgressIndicator())
-                  : _services.isEmpty
-                  ? Center(child: Text('لا توجد خدمات'))
-                  : ListView.builder(
-                      itemCount: _services.length,
-                      itemBuilder: (context, index) {
-                        final service = _services[index];
-                        return ServiceCard(
-                          data: service,
-                          isFavorite: _favoriteIds.contains(
-                            service['id'] ?? index,
+              child: ListView.builder(
+                itemCount: _services.length,
+                itemBuilder: (context, index) {
+                  final service = _services[index];
+                  return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: ListTile(
+                      leading: Image.network(
+                        service['image'],
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      ),
+                      title: Text(service['name']),
+                      subtitle: Text(service['hospital']),
+                      trailing: Text(service['price']),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ServiceDetailsPage(service: service),
                           ),
-                          onFavorite: () {
-                            setState(() {
-                              final id = service['id'] ?? index;
-                              if (_favoriteIds.contains(id)) {
-                                _favoriteIds.remove(id);
-                              } else {
-                                _favoriteIds.add(id);
-                              }
-                            });
-                          },
                         );
                       },
                     ),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.home, color: Colors.blue),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => HomePagem()),
-                );
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.favorite_border, color: Colors.blue),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => MySavedServicesPage()),
-                );
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.person_outline, color: Colors.blue),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => PatientProfileScreen()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-
-class ServiceCard extends StatelessWidget {
-  final Map<String, dynamic> data;
-  final VoidCallback? onFavorite;
-  final bool isFavorite;
-
-  const ServiceCard({
-    super.key,
-    required this.data,
-    this.onFavorite,
-    this.isFavorite = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 255, 255, 255),
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 6,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              data['hospitalName'] ?? "",
-              style: const TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-                color: Colors.blue,
-              ),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              data['name'] ?? "",
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Text(
-                  "${data['price']} جنيه",
-                  style: const TextStyle(fontSize: 14),
-                ),
-                const SizedBox(width: 15),
-                const Icon(Icons.access_time, size: 18, color: Colors.blue),
-                Text(
-                  data['working_Hours'] ?? "",
-                  style: const TextStyle(fontSize: 14),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(Icons.info_outline, size: 18, color: Colors.blue),
-                const SizedBox(width: 5),
-                Expanded(
-                  child: Text(
-                    data['description'] ?? "",
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 13),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => ServiceDetailsPage(id: data['serviceId']),
-                    ),
                   );
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-                child: const Text(
-                  "عرض التفاصيل",
-                  style: TextStyle(fontSize: 15, color: Colors.white),
-                ),
               ),
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: "My Saved",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_rounded),
+            label: "Profile",
+          ),
+        ],
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const HomePagem()),
+            );
+          } else if (index == 1) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const MySavedServicesPage()),
+            );
+          } else {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const PatientProfileScreen()),
+            );
+          }
+        },
       ),
     );
   }

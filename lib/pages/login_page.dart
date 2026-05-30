@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import '/api/api_service.dart';
 import 'register_page.dart';
 import 'Home_page.dart';
 
 class LoginPage extends StatefulWidget {
-  final ApiService api;
-
-  const LoginPage({super.key, required this.api});
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -19,7 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _loading = false;
   String _message = "";
 
-  void _login() async {
+  void _login() {
     String email = _emailController.text.trim();
     String password = _passwordController.text;
 
@@ -33,22 +30,18 @@ class _LoginPageState extends State<LoginPage> {
       _message = "";
     });
 
-    bool success = await widget.api.loginUser(email: email, password: password);
-
-    setState(() => _loading = false);
-
-    if (success) {
+    // Mock login
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() => _loading = false);
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text("تم تسجيل الدخول بنجاح")));
+      ).showSnackBar(const SnackBar(content: Text("تم تسجيل الدخول بنجاح")));
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const HomePagem()),
       );
-    } else {
-      setState(() => _message = "البريد الإلكتروني أو كلمة المرور غير صحيحة");
-    }
+    });
   }
 
   @override
@@ -74,12 +67,12 @@ class _LoginPageState extends State<LoginPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => RegisterPage(api: widget.api),
+                                builder: (_) => const RegisterPage(),
                               ),
                             );
                           },
                           child: Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 15,
                               vertical: 10,
                             ),
@@ -87,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                               color: Colors.blue,
                               borderRadius: BorderRadius.circular(50),
                             ),
-                            child: Text(
+                            child: const Text(
                               "تسجيل",
                               style: TextStyle(
                                 color: Colors.white,
@@ -97,11 +90,11 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
 
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         GestureDetector(
                           onTap: () {},
                           child: Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 15,
                               vertical: 10,
                             ),
@@ -110,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                               borderRadius: BorderRadius.circular(50),
                               border: Border.all(color: Colors.blue, width: 2),
                             ),
-                            child: Text(
+                            child: const Text(
                               "دخول",
                               style: TextStyle(
                                 color: Colors.blue,
@@ -127,9 +120,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
 
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
 
-              
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(16),
@@ -140,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                         width: 250,
                         height: 250,
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
                       Image.asset(
                         'Image/Container.png',
@@ -149,39 +141,39 @@ class _LoginPageState extends State<LoginPage> {
                         fit: BoxFit.cover,
                       ),
 
-                      SizedBox(height: 25),
+                      const SizedBox(height: 25),
 
                       TextField(
                         controller: _emailController,
                         decoration: InputDecoration(
                           labelText: "البريد الإلكتروني",
-                          prefixIcon: Icon(Icons.email),
+                          prefixIcon: const Icon(Icons.email),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
                       ),
 
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
 
                       TextField(
                         controller: _passwordController,
                         obscureText: true,
                         decoration: InputDecoration(
                           labelText: "كلمة المرور",
-                          prefixIcon: Icon(Icons.lock),
+                          prefixIcon: const Icon(Icons.lock),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
                       ),
 
-                      SizedBox(height: 25),
+                      const SizedBox(height: 25),
 
                       GestureDetector(
                         onTap: _loading ? null : _login,
                         child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 15),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: Colors.blue,
@@ -189,8 +181,10 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           child: Center(
                             child: _loading
-                                ? CircularProgressIndicator(color: Colors.white)
-                                : Text(
+                                ? const CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )
+                                : const Text(
                                     "دخول",
                                     style: TextStyle(
                                       fontSize: 18,
@@ -202,11 +196,11 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
 
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
                       Text(
                         _message,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.red,
                           fontWeight: FontWeight.bold,
                         ),

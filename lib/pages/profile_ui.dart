@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '/api/api_profile.dart';
 import 'Home_page.dart';
 import 'my_saved.dart';
 
@@ -11,91 +10,43 @@ class PatientProfileScreen extends StatefulWidget {
 }
 
 class _PatientProfileScreenState extends State<PatientProfileScreen> {
-  final api = PatientProfileApiService();
   final _formKey = GlobalKey<FormState>();
-  final _passwordFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _passwordFormKey = GlobalKey<FormState>();
 
-  final name = TextEditingController();
-  final email = TextEditingController();
-  final phone = TextEditingController();
-  final address = TextEditingController();
+  final name = TextEditingController(text: "John Doe");
+  final email = TextEditingController(text: "john.doe@example.com");
+  final phone = TextEditingController(text: "123-456-7890");
+  final address = TextEditingController(text: "123 Main St, Anytown, USA");
 
   final currentPass = TextEditingController();
   final newPass = TextEditingController();
   final confirmPass = TextEditingController();
 
-  bool loading = true;
+  bool loading = false;
 
   @override
   void initState() {
     super.initState();
-    loadData();
-  }
-
-  Future<void> loadData() async {
-    final profile = await api.getMyProfile();
-    if (profile != null) {
-      name.text = profile.name;
-      email.text = profile.email;
-      phone.text = profile.phoneNumber;
-      address.text = profile.address;
-    }
-    setState(() => loading = false);
   }
 
   Future<void> saveProfile() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() => loading = true);
-
-    final res = await api.updateProfile(
-      name: name.text.trim(),
-      email: email.text.trim(),
-      phoneNumber: phone.text.trim(),
-      address: address.text.trim(),
-    );
-
-    setState(() => loading = false);
-
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          res["success"] == true
-              ? "تم تحديث البيانات بنجاح"
-              : res["message"] ?? "حدث خطأ",
-        ),
-      ),
+      const SnackBar(content: Text("Profile updated successfully!")),
     );
   }
 
   Future<void> changePassword() async {
     if (!_passwordFormKey.currentState!.validate()) return;
 
-    setState(() => loading = true);
-
-    final res = await api.changePassword(
-      currentPassword: currentPass.text.trim(),
-      newPassword: newPass.text.trim(),
-      confirmNewPassword: confirmPass.text.trim(),
-    );
-
-    setState(() => loading = false);
-
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          res["success"] == true
-              ? "تم تغيير كلمة المرور بنجاح"
-              : res["message"] ?? "فشل تغيير كلمة المرور",
-        ),
-      ),
+      const SnackBar(content: Text("Password changed successfully!")),
     );
 
-    if (res["success"] == true) {
-      currentPass.clear();
-      newPass.clear();
-      confirmPass.clear();
-    }
+    currentPass.clear();
+    newPass.clear();
+    confirmPass.clear();
   }
 
   @override

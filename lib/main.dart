@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'api/api_service.dart';
 //import 'search_page.dart';
 import '/pages/Register_page.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final ApiService api = ApiService();
-
-  MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Directionality(
         textDirection: TextDirection.rtl,
-        child: RegisterPage(api: api),
+        child: RegisterPage(key: null,),
       ),
     );
   }

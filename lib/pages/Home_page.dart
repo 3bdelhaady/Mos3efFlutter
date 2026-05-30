@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'profile_ui.dart';
 import 'my_saved.dart';
 import 'search_page.dart';
-import '/api/api_service.dart';
 import 'Register_page.dart';
-
-final ApiService api = ApiService();
 
 class HomePagem extends StatelessWidget {
   const HomePagem({super.key});
@@ -28,7 +25,7 @@ class HomePagem extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => MySavedServicesPage()),
+                MaterialPageRoute(builder: (_) => const MySavedServicesPage()),
               );
             },
           ),
@@ -37,7 +34,7 @@ class HomePagem extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => PatientProfileScreen()),
+                MaterialPageRoute(builder: (_) => const PatientProfileScreen()),
               );
             },
           ),
@@ -46,7 +43,7 @@ class HomePagem extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => RegisterPage(api: api)),
+                MaterialPageRoute(builder: (_) => const RegisterPage(key: null,)),
               );
             },
           ),
@@ -79,7 +76,7 @@ class HomePagem extends StatelessWidget {
                 child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    side: BorderSide(color: Colors.blue, width: 2),
+                    side: const BorderSide(color: Colors.blue, width: 2),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
@@ -87,7 +84,7 @@ class HomePagem extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => ServicesPage(api: api)),
+                      MaterialPageRoute(builder: (_) => const ServicesPage()),
                     );
                   },
                   child: Row(
