@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '/pages/Register_page.dart';
 import '/pages/Home_page.dart';
 import '/providers/auth_provider.dart';
+import '/providers/services_provider.dart';
 import '/services/auth_service.dart';
 import '/theme/app_theme.dart';
 
@@ -25,6 +26,9 @@ class MyApp extends StatelessWidget {
         Provider<AuthService>(create: (_) => AuthService()),
         ChangeNotifierProvider<AuthProvider>(
           create: (context) => AuthProvider(context.read<AuthService>()),
+        ),
+        ChangeNotifierProvider<ServicesProvider>(
+          create: (_) => ServicesProvider(),
         ),
       ],
       child: MaterialApp(
