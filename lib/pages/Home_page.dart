@@ -16,7 +16,7 @@ class _HomePagemState extends State<HomePagem> {
   void _handleLogout(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return Directionality(
           textDirection: TextDirection.rtl,
           child: AlertDialog(
@@ -24,15 +24,17 @@ class _HomePagemState extends State<HomePagem> {
             content: const Text('هل أنت متأكد من رغبتك في تسجيل الخروج؟'),
             actions: [
               TextButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.of(dialogContext).pop(),
                 child: const Text('إلغاء'),
               ),
               TextButton(
                 onPressed: () async {
-                  Navigator.of(context).pop();
+                  Navigator.of(dialogContext).pop();
                   await context.read<AuthProvider>().logout();
                   if (mounted) {
-                    Navigator.of(context).pushReplacementNamed('/login');
+                    Future.delayed(const Duration(milliseconds: 100), () {
+                      Navigator.of(context).pushReplacementNamed('/login');
+                    });
                   }
                 },
                 child: const Text('تسجيل الخروج'),
@@ -220,62 +222,106 @@ class _HomePagemState extends State<HomePagem> {
         ],
       ),
       padding: const EdgeInsets.all(12),
-      child: Row(
+      child: Column(
         children: [
-          // Service info
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  service.name,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+          Row(
+            children: [
+              // Service info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      service.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      service.serviceName,
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'السعر: ${service.price.toStringAsFixed(0)} جنيه',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  service.serviceName,
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+              ),
+              // Heart icon
+              IconButton(
+                icon: Icon(
+                  service.isSaved ? Icons.favorite : Icons.favorite_border,
+                  color: service.isSaved ? Colors.red : Colors.grey,
+                  size: 24,
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'السعر: ${service.price.toStringAsFixed(0)} جنيه',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
-                ),
-              ],
-            ),
+                onPressed: () {
+                  provider.toggleSaveService(service);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        service.isSaved
+                            ? 'تمت إضافة الخدمة للمفضلة'
+                            : 'تمت إزالة الخدمة من المفضلة',
+                      ),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
-          // Heart icon
-          IconButton(
-            icon: Icon(
-              service.isSaved ? Icons.favorite : Icons.favorite_border,
-              color: service.isSaved ? Colors.red : Colors.grey,
-              size: 24,
-            ),
-            onPressed: () {
-              provider.toggleSaveService(service);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    service.isSaved
-                        ? 'تمت إضافة الخدمة للمفضلة'
-                        : 'تمت إزالة الخدمة من المفضلة',
-                  ),
-                  duration: const Duration(seconds: 2),
+          const SizedBox(height: 10),
+          // Service request button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: service.isRequested == true
+                    ? Colors.green
+                    : Colors.blue,
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
-              );
-            },
+              ),
+              onPressed: () {
+                final wasRequested = service.isRequested == true;
+                provider.requestService(service);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      wasRequested
+                          ? 'تم إلغاء طلب الخدمة'
+                          : 'تم طلب الخدمة بنجاح',
+                    ),
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+              },
+              child: Text(
+                service.isRequested == true
+                    ? 'تم طلب الخدمة بنجاح'
+                    : 'طلب الخدمة',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+            ),
           ),
         ],
       ),

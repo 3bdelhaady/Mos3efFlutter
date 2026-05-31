@@ -115,7 +115,7 @@ class ServicesProvider extends ChangeNotifier {
     ),
   ];
 
-  List<Service> _savedServices = [];
+  final List<Service> _savedServices = [];
   String _selectedFilter = 'all';
 
   // Getters
@@ -161,6 +161,17 @@ class ServicesProvider extends ChangeNotifier {
       _allServices[index] = _allServices[index].copyWith(isSaved: false);
     }
     _savedServices.removeWhere((s) => s.id == id);
+    notifyListeners();
+  }
+
+  // Request service
+  void requestService(Service service) {
+    final index = _allServices.indexWhere((s) => s.id == service.id);
+    if (index != -1) {
+      _allServices[index] = _allServices[index].copyWith(
+        isRequested: !_allServices[index].isRequested,
+      );
+    }
     notifyListeners();
   }
 }

@@ -11,11 +11,11 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _passwordFormKey = GlobalKey<FormState>();
 
-  final name = TextEditingController();
-  final bloodType = TextEditingController();
-  final phone = TextEditingController();
-  final email = TextEditingController();
-  final address = TextEditingController();
+  final name = TextEditingController(text: 'منة عاطف عبدالحميد');
+  final bloodType = TextEditingController(text: 'O+');
+  final phone = TextEditingController(text: '0101234567');
+  final email = TextEditingController(text: 'mennaatef@gmail.com');
+  final address = TextEditingController(text: 'ارمنت الوبرات - ارمنت - الاقصر');
 
   final currentPass = TextEditingController();
   final newPass = TextEditingController();
@@ -115,31 +115,31 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                             children: [
                               _arabicField(
                                 name,
-                                "الاسم الكامل (مثال: منة عاطف عبدالحميد)",
+                                "الاسم الكامل",
                                 Icons.person,
                               ),
                               const SizedBox(height: 10),
                               _arabicField(
                                 bloodType,
-                                "فصيلة الدم (مثال: O+)",
+                                "فصيلة الدم",
                                 Icons.bloodtype,
                               ),
                               const SizedBox(height: 10),
                               _arabicField(
                                 phone,
-                                "رقم الهاتف (مثال: 0101234567)",
+                                "رقم الهاتف",
                                 Icons.phone,
                               ),
                               const SizedBox(height: 10),
                               _arabicField(
                                 email,
-                                "البريد الإلكتروني (مثال: mennaatef@gmail.com)",
+                                "البريد الإلكتروني",
                                 Icons.email,
                               ),
                               const SizedBox(height: 10),
                               _arabicField(
                                 address,
-                                "العنوان (مثال: ارمنت الوبرات - ارمنت - الاقصر)",
+                                "العنوان",
                                 Icons.location_on,
                               ),
                               const SizedBox(height: 20),

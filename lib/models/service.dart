@@ -6,6 +6,7 @@ class Service {
   final double price;
   final String? image;
   bool isSaved;
+  bool isRequested;
 
   Service({
     required this.id,
@@ -15,6 +16,7 @@ class Service {
     required this.price,
     this.image,
     this.isSaved = false,
+    this.isRequested = false,
   });
 
   // Create a copy with modified fields
@@ -26,6 +28,7 @@ class Service {
     double? price,
     String? image,
     bool? isSaved,
+    bool? isRequested,
   }) {
     return Service(
       id: id ?? this.id,
@@ -35,6 +38,7 @@ class Service {
       price: price ?? this.price,
       image: image ?? this.image,
       isSaved: isSaved ?? this.isSaved,
+      isRequested: isRequested ?? this.isRequested,
     );
   }
 }
