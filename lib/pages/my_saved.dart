@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'profile_ui.dart';
-import './Home_page.dart';
 import '/providers/services_provider.dart';
 
 class MySavedServicesPage extends StatefulWidget {
@@ -126,28 +124,6 @@ class _MySavedServicesPageState extends State<MySavedServicesPage> {
                 },
               ),
             );
-          },
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_rounded),
-              label: "Profile",
-            ),
-          ],
-          onTap: (index) {
-            if (index == 0) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const HomePagem()),
-              );
-            } else {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const PatientProfileScreen()),
-              );
-            }
           },
         ),
       ),

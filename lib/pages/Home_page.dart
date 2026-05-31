@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'profile_ui.dart';
 import 'my_saved.dart';
-import 'search_page.dart';
 import '/providers/auth_provider.dart';
 import '/providers/services_provider.dart';
 
@@ -29,9 +28,12 @@ class _HomePagemState extends State<HomePagem> {
                 child: const Text('إلغاء'),
               ),
               TextButton(
-                onPressed: () {
+                onPressed: () async {
                   Navigator.of(context).pop();
-                  context.read<AuthProvider>().logout();
+                  await context.read<AuthProvider>().logout();
+                  if (mounted) {
+                    Navigator.of(context).pushReplacementNamed('/login');
+                  }
                 },
                 child: const Text('تسجيل الخروج'),
               ),
@@ -91,44 +93,9 @@ class _HomePagemState extends State<HomePagem> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              // Search button
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    side: const BorderSide(color: Colors.blue, width: 2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const ServicesPage()),
-                    );
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.search, color: Colors.blue),
-                      SizedBox(width: 10),
-                      Text(
-                        "ابحث عن خدمة",
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
               // Filter buttons
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.fromLTRB(16, 20, 16, 10),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Consumer<ServicesProvider>(

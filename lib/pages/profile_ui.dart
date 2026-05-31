@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'Home_page.dart';
-import 'my_saved.dart';
 
 class PatientProfileScreen extends StatefulWidget {
   const PatientProfileScreen({super.key});
@@ -13,10 +11,11 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _passwordFormKey = GlobalKey<FormState>();
 
-  final name = TextEditingController(text: "John Doe");
-  final email = TextEditingController(text: "john.doe@example.com");
-  final phone = TextEditingController(text: "123-456-7890");
-  final address = TextEditingController(text: "123 Main St, Anytown, USA");
+  final name = TextEditingController();
+  final bloodType = TextEditingController();
+  final phone = TextEditingController();
+  final email = TextEditingController();
+  final address = TextEditingController();
 
   final currentPass = TextEditingController();
   final newPass = TextEditingController();
@@ -32,9 +31,31 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
   Future<void> saveProfile() async {
     if (!_formKey.currentState!.validate()) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Profile updated successfully!")),
-    );
+    setState(() => loading = true);
+
+    try {
+      // Simulate saving profile data
+      await Future.delayed(const Duration(seconds: 1));
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("تم حفظ التعديلات بنجاح"),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("خطأ: $e")));
+      }
+    } finally {
+      if (mounted) {
+        setState(() => loading = false);
+      }
+    }
   }
 
   Future<void> changePassword() async {
@@ -92,19 +113,33 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                           key: _formKey,
                           child: Column(
                             children: [
-                              _arabicField(name, "الاسم الكامل", Icons.person),
+                              _arabicField(
+                                name,
+                                "الاسم الكامل (مثال: منة عاطف عبدالحميد)",
+                                Icons.person,
+                              ),
+                              const SizedBox(height: 10),
+                              _arabicField(
+                                bloodType,
+                                "فصيلة الدم (مثال: O+)",
+                                Icons.bloodtype,
+                              ),
+                              const SizedBox(height: 10),
+                              _arabicField(
+                                phone,
+                                "رقم الهاتف (مثال: 0101234567)",
+                                Icons.phone,
+                              ),
                               const SizedBox(height: 10),
                               _arabicField(
                                 email,
-                                "البريد الإلكتروني",
+                                "البريد الإلكتروني (مثال: mennaatef@gmail.com)",
                                 Icons.email,
                               ),
                               const SizedBox(height: 10),
-                              _arabicField(phone, "رقم الهاتف", Icons.phone),
-                              const SizedBox(height: 10),
                               _arabicField(
                                 address,
-                                "العنوان",
+                                "العنوان (مثال: ارمنت الوبرات - ارمنت - الاقصر)",
                                 Icons.location_on,
                               ),
                               const SizedBox(height: 20),
@@ -201,45 +236,6 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                     ],
                   ),
                 ),
-        ),
-        bottomNavigationBar: Container(
-          color: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.person_outline, color: Colors.blue),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => PatientProfileScreen()),
-                  );
-                },
-              ),
-
-              IconButton(
-                icon: const Icon(Icons.favorite_border, color: Colors.blue),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => MySavedServicesPage()),
-                  );
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.home, color: Colors.blue),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => HomePagem(),
-                    ), // your home page
-                  );
-                },
-              ),
-            ],
-          ),
         ),
       ),
     );
