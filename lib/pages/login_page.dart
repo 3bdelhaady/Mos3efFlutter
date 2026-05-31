@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'register_page.dart';
+import 'Home_page.dart';
 import '/providers/auth_provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -39,6 +40,9 @@ class _LoginPageState extends State<LoginPage> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text("تم تسجيل الدخول بنجاح")));
+
+        // Navigate to home page after successful login
+        Navigator.of(context).pushReplacementNamed('/home');
       } else if (authProvider.errorMessage.isNotEmpty) {
         ScaffoldMessenger.of(
           context,
@@ -53,6 +57,9 @@ class _LoginPageState extends State<LoginPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("تم تسجيل الدخول عبر Google بنجاح")),
         );
+
+        // Navigate to home page after successful Google login
+        Navigator.of(context).pushReplacementNamed('/home');
       } else if (authProvider.errorMessage.isNotEmpty) {
         ScaffoldMessenger.of(
           context,

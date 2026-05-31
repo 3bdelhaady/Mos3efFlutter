@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Moseef',
         theme: AppTheme.lightTheme,
+        routes: {'/home': (context) => const HomePagem()},
         home: Directionality(
           textDirection: TextDirection.rtl,
           child: Consumer<AuthProvider>(
