@@ -1,8 +1,10 @@
 # Software Requirements Specification (SRS)
 
+**Date**: May 31, 2026
+
 ## 1. Introduction
 
-This document outlines the Software Requirements Specification for the Mos3efFlutter application. The application is a mobile client developed using Flutter that provides users with a platform to discover and interact with various services.
+This document outlines the Software Requirements Specification for the Mos3efFlutter application. The application is a mobile client developed using Flutter that provides users with a platform to discover and interact with various services. This SRS serves as the requirements baseline for the project and guides all development and testing activities.
 
 ### 1.1. Purpose
 
