@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PatientProfileScreen extends StatefulWidget {
   const PatientProfileScreen({super.key});
@@ -11,11 +12,11 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _passwordFormKey = GlobalKey<FormState>();
 
-  final name = TextEditingController(text: 'منة عاطف عبدالحميد');
-  final bloodType = TextEditingController(text: 'O+');
-  final phone = TextEditingController(text: '0101234567');
-  final email = TextEditingController(text: 'mennaatef@gmail.com');
-  final address = TextEditingController(text: 'ارمنت الوبرات - ارمنت - الاقصر');
+  final name = TextEditingController();
+  final bloodType = TextEditingController();
+  final phone = TextEditingController();
+  final email = TextEditingController();
+  final address = TextEditingController();
 
   final currentPass = TextEditingController();
   final newPass = TextEditingController();
@@ -26,6 +27,39 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
   @override
   void initState() {
     super.initState();
+    _loadProfileData();
+  }
+
+  Future<void> _loadProfileData() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+
+      setState(() {
+        name.text = prefs.getString('profile_name') ?? 'منة عاطف عبدالحميد';
+        bloodType.text = prefs.getString('profile_bloodType') ?? 'O+';
+        phone.text = prefs.getString('profile_phone') ?? '0101234567';
+        email.text = prefs.getString('profile_email') ?? 'mennaatef@gmail.com';
+        address.text =
+            prefs.getString('profile_address') ??
+            'ارمنت الوبرات - ارمنت - الاقصر';
+      });
+    } catch (e) {
+      debugPrint('Error loading profile data: $e');
+    }
+  }
+
+  Future<void> _saveProfileData() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+
+      await prefs.setString('profile_name', name.text);
+      await prefs.setString('profile_bloodType', bloodType.text);
+      await prefs.setString('profile_phone', phone.text);
+      await prefs.setString('profile_email', email.text);
+      await prefs.setString('profile_address', address.text);
+    } catch (e) {
+      debugPrint('Error saving profile data: $e');
+    }
   }
 
   Future<void> saveProfile() async {
@@ -34,6 +68,9 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
     setState(() => loading = true);
 
     try {
+      // Save profile data to SharedPreferences
+      await _saveProfileData();
+
       // Simulate saving profile data
       await Future.delayed(const Duration(seconds: 1));
 
@@ -68,6 +105,19 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
     currentPass.clear();
     newPass.clear();
     confirmPass.clear();
+  }
+
+  @override
+  void dispose() {
+    name.dispose();
+    bloodType.dispose();
+    phone.dispose();
+    email.dispose();
+    address.dispose();
+    currentPass.dispose();
+    newPass.dispose();
+    confirmPass.dispose();
+    super.dispose();
   }
 
   @override
@@ -113,11 +163,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                           key: _formKey,
                           child: Column(
                             children: [
-                              _arabicField(
-                                name,
-                                "الاسم الكامل",
-                                Icons.person,
-                              ),
+                              _arabicField(name, "الاسم الكامل", Icons.person),
                               const SizedBox(height: 10),
                               _arabicField(
                                 bloodType,
@@ -125,11 +171,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                                 Icons.bloodtype,
                               ),
                               const SizedBox(height: 10),
-                              _arabicField(
-                                phone,
-                                "رقم الهاتف",
-                                Icons.phone,
-                              ),
+                              _arabicField(phone, "رقم الهاتف", Icons.phone),
                               const SizedBox(height: 10),
                               _arabicField(
                                 email,
