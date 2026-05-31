@@ -1,11 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'profile_ui.dart';
 import 'my_saved.dart';
 import 'search_page.dart';
-import 'Register_page.dart';
+import '/providers/auth_provider.dart';
 
 class HomePagem extends StatelessWidget {
   const HomePagem({super.key});
+
+  void _handleLogout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: AlertDialog(
+            title: const Text('تسجيل الخروج'),
+            content: const Text('هل أنت متأكد من رغبتك في تسجيل الخروج؟'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('إلغاء'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  context.read<AuthProvider>().logout();
+                },
+                child: const Text('تسجيل الخروج'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +69,7 @@ class HomePagem extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.blue),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const RegisterPage(key: null,)),
-              );
-            },
+            onPressed: () => _handleLogout(context),
           ),
           const SizedBox(width: 10),
         ],

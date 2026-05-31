@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "646159406526",
+    "project_id": "mos3ef-f0fba",
+    "storage_bucket": "mos3ef-f0fba.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:646159406526:android:473705dc9586a010da95ef",
+        "android_client_info": {
+          "package_name": "svnu.moseef"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "646159406526-1trs9hv06g15meft0v8u1jqv3009iem4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "svnu.moseef",
+            "certificate_hash": "413c9510e1d1991929f59326e433fc7960e9750c"
+          }
+        },
+        {
+          "client_id": "646159406526-0h6v83hd2j9mn4n1vb6cirag55n8rg88.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAu1V7fjWahInPFL7NVgp6x95Q8JliLrIw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "646159406526-0h6v83hd2j9mn4n1vb6cirag55n8rg88.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
